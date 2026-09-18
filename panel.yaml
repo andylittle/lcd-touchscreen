@@ -6,26 +6,26 @@ substitutions:
   room: Living Room
 
   # ---- Home Assistant entities shown on the dashboard ----
-  # PLACEHOLDERS until entity discovery. Keep every entity here so
+  # Picked from HA on 2026-09-18 (HA at 192.168.1.212:8123). Keep every entity here so
   # re-targeting a card is a one-line change. Names are the card labels.
-  light_1: light.living_room
-  light_1_name: Living Room
-  light_2: light.kitchen
-  light_2_name: Kitchen
-  light_3: light.bedroom
-  light_3_name: Bedroom
-  light_4: light.porch
-  light_4_name: Porch
-  switch_1: switch.fan
-  switch_1_name: Fan
-  switch_2: switch.lamp
-  switch_2_name: Lamp
-  switch_3: switch.heater
-  switch_3_name: Heater
-  switch_4: switch.outlet
-  switch_4_name: Outlet
-  climate_main: climate.thermostat
-  climate_name: Thermostat
+  light_1: light.living_room_lamp_one
+  light_1_name: LR Lamp One
+  light_2: light.living_room_lamp_two
+  light_2_name: LR Lamp Two
+  light_3: light.porch_light
+  light_3_name: Porch Light
+  light_4: light.light_upstairs_hall_fe04b14c_10
+  light_4_name: Hall Light
+  switch_1: switch.lr_lamps
+  switch_1_name: LR Lamps
+  switch_2: switch.landscape_lights
+  switch_2_name: Landscape
+  switch_3: switch.yard_light
+  switch_3_name: Yard Light
+  switch_4: switch.tasmota_plug14
+  switch_4_name: Hall Fan
+  climate_main: climate.downstairs
+  climate_name: Downstairs
   temp_unit: "°F"
   temp_step: "1"
 
