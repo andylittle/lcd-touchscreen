@@ -93,3 +93,12 @@ display:
     reset_pin: GPIO27
     update_interval: never
     auto_clear_enabled: false
+
+# Local copy of mipi_dsi with the DPHY PLL clock-source fix from upstream PR
+# esphome/esphome#18984 (not in 2026.9.0). Without it the DSI bus setup calls
+# abort() on ESP32-P4 v3.x silicon. Remove once running ESPHome >= 2026.10.
+external_components:
+  - source:
+      type: local
+      path: components
+    components: [mipi_dsi]

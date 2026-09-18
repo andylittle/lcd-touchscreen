@@ -14,7 +14,7 @@ Home Assistant wall dashboard (lights, switches, thermostat).
 | Touch | GSL3680, ESPHome `gsl3670` model `GUITION-JC8012P4A1` |
 | Flash / PSRAM | 16 MB / hex-mode PSRAM |
 | Backlight | LEDC PWM on GPIO23 |
-| Serial | USB-C exposes UART0 (`logger: hardware_uart: UART0`) |
+| Serial | USB-C exposes UART0 via a CH340 (`/dev/ttyUSB0`), so `logger: hardware_uart: UART0` |
 
 Older units (batch < 2624) need `model: JC8012P4A1`; units with pre-v3 P4 silicon need
 `engineering_sample: true`. Both are in `packages/hardware.yaml`.
@@ -29,6 +29,7 @@ packages/c6_update.yaml  C6 co-processor firmware updater (visible in HA)
 packages/ha_entities.yaml  HA state mirrored into the panel (sensors / binary sensors)
 packages/lvgl_theme.yaml fonts, colors, styles, screensaver
 packages/lvgl_pages.yaml the dashboard pages
+components/mipi_dsi/     patched copy of the ESPHome display driver (see Troubleshooting)
 ```
 
 ## Setup
@@ -47,9 +48,9 @@ cp secrets.yaml.example secrets.yaml   # then edit
 
 ```
 .venv/bin/esphome config panel.yaml                     # validate
-.venv/bin/esphome run panel.yaml --device /dev/ttyACM0  # first flash over USB-C
+.venv/bin/esphome run panel.yaml --device /dev/ttyUSB0  # first flash over USB-C
 .venv/bin/esphome run panel.yaml                        # later: OTA
-.venv/bin/esphome logs panel.yaml --device /dev/ttyACM0 # serial log
+.venv/bin/esphome logs panel.yaml --device /dev/ttyUSB0 # serial log
 ```
 
 Then in Home Assistant: Settings > Devices > ESPHome, add the discovered device and enable
@@ -71,6 +72,11 @@ Screensaver: backlight dims to 20 % after 2 min idle and turns off after 10 min;
 it. The backlight is also a light entity in HA (`Display Backlight`).
 
 ## Troubleshooting
+
+- **Boot loop with `abort() ... _mipi_dsi_ll_set_phy_pllref_clock_source`**: ESPHome 2026.9.0
+  passes the legacy DPHY clock source, which ESP-IDF rejects on P4 v3.x silicon. `components/mipi_dsi`
+  is a local copy with upstream fix esphome/esphome#18984; `packages/hardware.yaml` loads it via
+  `external_components`. Drop both once on ESPHome >= 2026.10.
 
 - **Black or garbled screen**: try `model: JC8012P4A1` (older panel revision).
 - **Touch mirrored/offset**: add a `transform:` block to the touchscreen (the model preset is

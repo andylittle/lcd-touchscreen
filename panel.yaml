@@ -1,5 +1,5 @@
 # Guition JC8012P4A1C (v3 / batch 2635) - Home Assistant wall panel
-# Entry point. Build:  .venv/bin/esphome run panel.yaml [--device /dev/ttyACM0]
+# Entry point. Build:  .venv/bin/esphome run panel.yaml [--device /dev/ttyUSB0]
 substitutions:
   name: lcd-panel
   friendly_name: LCD Panel
