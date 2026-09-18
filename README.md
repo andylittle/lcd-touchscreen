@@ -11,13 +11,30 @@ Home Assistant wall dashboard (lights, switches, thermostat).
 | SoC | ESP32-P4, production silicon v3.x (`engineering_sample: false`) |
 | WiFi/BLE | ESP32-C6 co-processor over SDIO (`esp32_hosted`) |
 | Display | 10.1" 800x1280 MIPI-DSI, ESPHome model `JC8012P4A1-V2` (batch >= 2624) |
-| Touch | GSL3680, ESPHome `gsl3670` model `GUITION-JC8012P4A1` |
+| Touch | GSL3680 at I2C 0x40, vendored `gsl3680` driver (`components/gsl3680`) |
 | Flash / PSRAM | 16 MB / hex-mode PSRAM |
 | Backlight | LEDC PWM on GPIO23 |
-| Serial | USB-C exposes UART0 via a CH340 (`/dev/ttyUSB0`), so `logger: hardware_uart: UART0` |
+| Serial | USB-C port marked **USB_UART** (CH340, `/dev/ttyUSB0`), so `logger: hardware_uart: UART0` |
+| Power | Needs a direct USB port or 5 V / 2 A supply. A dock port left touch dead (see Troubleshooting) |
 
 Older units (batch < 2624) need `model: JC8012P4A1`; units with pre-v3 P4 silicon need
 `engineering_sample: true`. Both are in `packages/hardware.yaml`.
+
+<p>
+  <img src="docs/images/label.jpg" alt="Rear label: SKU 10153001-V3 (2635), model JC8012P4A1C_I_W_Y, 800*1280" width="480">
+</p>
+
+The rear label gives the SKU and batch number (here `10153001-V3 (2635)`), which decide the
+display model above.
+
+<p>
+  <img src="docs/images/board.jpg" alt="JC8012P4A1 board with the back cover removed, USB cable in the USB_UART port" width="360">
+</p>
+
+With the back cover off: the board has three USB-C ports along the bottom edge. Flash and read
+logs through the left one, marked **USB_UART**. The other two are the P4's high-speed and
+full-speed USB. The ESP32-C6 WiFi module sits near the top, and the BOOT and RESET buttons are
+on the board if a flash ever needs manual download mode.
 
 ## Layout
 
@@ -31,6 +48,7 @@ packages/lvgl_theme.yaml fonts, colors, styles, screensaver
 packages/lvgl_pages.yaml the dashboard pages
 components/mipi_dsi/     patched copy of the ESPHome display driver (see Troubleshooting)
 components/gsl3680/      touch driver (espcontrol copy of kvj's) + Guition demo firmware table
+docs/images/             photos used in this README
 ```
 
 ## Setup
