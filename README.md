@@ -30,6 +30,7 @@ packages/ha_entities.yaml  HA state mirrored into the panel (sensors / binary se
 packages/lvgl_theme.yaml fonts, colors, styles, screensaver
 packages/lvgl_pages.yaml the dashboard pages
 components/mipi_dsi/     patched copy of the ESPHome display driver (see Troubleshooting)
+components/gsl3680/      touch driver (espcontrol copy of kvj's) + Guition demo firmware table
 ```
 
 ## Setup
@@ -79,6 +80,12 @@ it. The backlight is also a light entity in HA (`Display Backlight`).
   `external_components`. Drop both once on ESPHome >= 2026.10.
 
 - **Black or garbled screen**: try `model: JC8012P4A1` (older panel revision).
+- **Touch does nothing / log shows `GSL3680 firmware did not start`**: the controller answers
+  on I2C 0x40 and accepts the firmware upload, but the RAM marker at 0xB0 never reads 5A.
+  Driver, firmware table (identical to Guition's demo), init order and timing all match the
+  stock firmware, which works on other batch-2635 units. Suspect power or hardware on this
+  unit: fully power-cycle it (unplug USB, and any battery, for 10 s), power it from a direct
+  port or 5 V adapter instead of a dock, and check the touch flex cable.
 - **Touch mirrored/offset**: add a `transform:` block to the touchscreen (the model preset is
   usually right; the espcontrol project uses `mirror_x: true, mirror_y: false`).
 - **Boot loop with `HS_MP: mempool create failed`**: keep `CONFIG_ESP_HOSTED_USE_MEMPOOL: "n"`.

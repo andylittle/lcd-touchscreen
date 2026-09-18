@@ -61,7 +61,9 @@ light:
     id: display_backlight
     name: Display Backlight
     icon: mdi:brightness-6
-    restore_mode: RESTORE_DEFAULT_ON
+    # Held off during boot so the touch controller starts on stable power
+    # (stock firmware also enables the backlight only after touch init).
+    restore_mode: ALWAYS_OFF
     default_transition_length: 250ms
     gamma_correct: 1.0
 
@@ -74,13 +76,25 @@ i2c:
     sda_pullup_enabled: false
     scl_pullup_enabled: false
 
+# Community GSL3680 driver (kvj/esphome@jd9365_gsl3680, vendored in components/gsl3680):
+# carries the Guition vendor touch firmware + Silead point-ID algorithm. ESPHome's
+# native gsl3670 preset loads a Seeed firmware and produced no touches on this unit.
 touchscreen:
-  - platform: gsl3670
+  - platform: gsl3680
     id: panel_touch
     i2c_id: touch_i2c
-    model: GUITION-JC8012P4A1
+    reset_pin: GPIO22
+    interrupt_pin: GPIO21
+    # Init touch AFTER the MIPI-DSI panel (default priority 600), matching the
+    # Guition stock firmware. Before the panel is up, the GSL3680 accepts I2C
+    # writes but its firmware never starts (RAM marker at 0xB0 stays 0).
+    setup_priority: 590
     # Controller may not interrupt on finger lift; poll briefly so LVGL gets release/click.
     touch_timeout: 50ms
+    transform:
+      swap_xy: false
+      mirror_x: true
+      mirror_y: false
     on_touch:
       - lambda: ESP_LOGD("touch", "x=%d y=%d", touch.x, touch.y);
     on_release:
@@ -101,4 +115,4 @@ external_components:
   - source:
       type: local
       path: components
-    components: [mipi_dsi]
+    components: [mipi_dsi, gsl3680]
