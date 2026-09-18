@@ -1,0 +1,95 @@
+# Hardware definition: Guition JC8012P4A1C, panel revision V2 (batch >= 2624),
+# ESP32-P4 production silicon v3.x (engineering_sample: false).
+esp32:
+  variant: esp32p4
+  flash_size: 16MB
+  cpu_frequency: 360MHZ
+  engineering_sample: false
+  framework:
+    type: esp-idf
+    advanced:
+      enable_idf_experimental_features: true
+      execute_from_psram: true
+    sdkconfig_options:
+      CONFIG_SDMMC_HOST_DEFAULT: "y"
+      CONFIG_LWIP_MAX_SOCKETS: "20"
+      CONFIG_ESP_MAIN_TASK_STACK_SIZE: "8192"
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      # Display init and native OTA can block the loop task for a while.
+      CONFIG_ESP_TASK_WDT_TIMEOUT_S: "60"
+      CONFIG_SPI_FLASH_YIELD_DURING_ERASE: "n"
+      # ESP-Hosted static mempool can fail on P4 display builds
+      # ("HS_MP: mempool create failed: no mem") and boot-loop.
+      CONFIG_ESP_HOSTED_USE_MEMPOOL: "n"
+      CONFIG_ESP_HOSTED_DFLT_TASK_FROM_SPIRAM: "y"
+      CONFIG_FREERTOS_THREAD_LOCAL_STORAGE_POINTERS: "1"
+
+# ESP32-C6 WiFi/BLE co-processor over SDIO
+esp32_hosted:
+  variant: esp32c6
+  reset_pin: GPIO54
+  cmd_pin: GPIO19
+  clk_pin: GPIO18
+  d0_pin: GPIO14
+  d1_pin: GPIO15
+  d2_pin: GPIO16
+  d3_pin: GPIO17
+  active_high: true
+
+# PSRAM holds the LVGL frame buffers
+psram:
+  mode: hex
+  speed: 200MHz
+
+# MIPI-DSI PHY power
+esp_ldo:
+  - channel: 3
+    id: dsi_phy_enable
+    voltage: 2.5V
+    adjustable: true
+
+# Backlight PWM (20 kHz keeps it above audible range)
+output:
+  - platform: ledc
+    pin: GPIO23
+    id: backlight_pwm
+    frequency: 20000Hz
+
+light:
+  - platform: monochromatic
+    output: backlight_pwm
+    id: display_backlight
+    name: Display Backlight
+    icon: mdi:brightness-6
+    restore_mode: RESTORE_DEFAULT_ON
+    default_transition_length: 250ms
+    gamma_correct: 1.0
+
+# Touch controller bus
+i2c:
+  - id: touch_i2c
+    sda: GPIO7
+    scl: GPIO8
+    frequency: 400kHz
+    sda_pullup_enabled: false
+    scl_pullup_enabled: false
+
+touchscreen:
+  - platform: gsl3670
+    id: panel_touch
+    i2c_id: touch_i2c
+    model: GUITION-JC8012P4A1
+    # Controller may not interrupt on finger lift; poll briefly so LVGL gets release/click.
+    touch_timeout: 50ms
+    on_touch:
+      - lambda: ESP_LOGD("touch", "x=%d y=%d", touch.x, touch.y);
+    on_release:
+      - script.execute: screen_wake
+
+display:
+  - platform: mipi_dsi
+    id: panel_display
+    model: JC8012P4A1-V2
+    reset_pin: GPIO27
+    update_interval: never
+    auto_clear_enabled: false

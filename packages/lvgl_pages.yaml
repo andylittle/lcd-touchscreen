@@ -1,0 +1,68 @@
+# Bring-up page. Replaced by the real dashboard in step 4.
+lvgl:
+  top_layer:
+    widgets:
+      - label:
+          id: lbl_clock
+          text: "--:--"
+          text_font: f_title
+          align: top_left
+          x: 20
+          y: 16
+      - label:
+          id: lbl_title
+          text: ${friendly_name}
+          text_font: f_title
+          align: top_mid
+          y: 16
+      - label:
+          id: lbl_wifi
+          text: ${i_wifi_off}
+          text_font: f_icon_small
+          align: top_right
+          x: -20
+          y: 20
+  pages:
+    - id: page_main
+      styles: st_page
+      layout:
+        type: flex
+        flex_flow: row_wrap
+        pad_row: 16
+        pad_column: 16
+      widgets:
+        - button:
+            id: btn_test
+            width: ${card_w}
+            height: ${card_h}
+            checkable: true
+            widgets:
+              - label:
+                  styles: st_card_icon
+                  text: ${i_lightbulb}
+                  align: top_left
+              - label:
+                  styles: st_card_label
+                  text: "Test button"
+                  align: bottom_left
+            on_click:
+              - logger.log: "Test button clicked"
+        - label:
+            id: lbl_status
+            text: "Bring-up: display OK. Tap the card; check the log."
+            text_font: f_small
+            text_color: ${c_text_dim}
+            width: 100%
+
+wifi:
+  on_connect:
+    - lvgl.label.update:
+        id: lbl_wifi
+        text: ${i_wifi}
+    - lvgl.label.update:
+        id: lbl_status
+        text: !lambda 'return "WiFi connected: " + id(wifi_ip).state;'
+  on_disconnect:
+    - lvgl.label.update:
+        id: lbl_wifi
+        text: ${i_wifi_off}

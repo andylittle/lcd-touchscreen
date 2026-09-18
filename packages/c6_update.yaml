@@ -1,0 +1,17 @@
+# ESP32-C6 co-processor firmware, updatable from Home Assistant.
+update:
+  - platform: esp32_hosted
+    id: esp32_c6_update
+    name: ESP32-C6 Firmware
+    type: http
+    http_request_id: http_req
+    source: https://esphome.github.io/esp-hosted-firmware/manifest/esp32c6.json
+    update_interval: never
+
+button:
+  - platform: template
+    name: ESP32-C6 Check for Update
+    entity_category: config
+    icon: mdi:update
+    on_press:
+      - update.check: esp32_c6_update

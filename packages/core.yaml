@@ -1,0 +1,53 @@
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  area: ${room}
+  platformio_options:
+    board_build.flash_mode: dio
+
+# The panel's USB-C serial goes through a UART0 bridge, not USB-Serial-JTAG.
+logger:
+  level: DEBUG
+  hardware_uart: UART0
+  logs:
+    lvgl: INFO
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    encryption: {}   # reuses the api encryption key
+
+safe_mode:
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: true
+
+# Needed by the C6 firmware updater
+http_request:
+  id: http_req
+  verify_ssl: false
+
+time:
+  - platform: homeassistant
+    id: ha_time
+    on_time:
+      - seconds: 0
+        then:
+          - script.execute: refresh_clock
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      id: wifi_ip
+      name: IP Address
+      entity_category: diagnostic
+
+button:
+  - platform: restart
+    name: Restart
+    entity_category: diagnostic

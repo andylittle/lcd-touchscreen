@@ -1,0 +1,4 @@
+# Home Assistant state mirrored into the panel. Populated after entity
+# discovery (step 3). Each dashboard card has a matching entry here.
+sensor: []
+binary_sensor: []

@@ -1,0 +1,19 @@
+# Guition JC8012P4A1C (v3 / batch 2635) - Home Assistant wall panel
+# Entry point. Build:  .venv/bin/esphome run panel.yaml [--device /dev/ttyACM0]
+substitutions:
+  name: lcd-panel
+  friendly_name: LCD Panel
+  room: Living Room
+
+  # ---- Home Assistant entities shown on the dashboard ----
+  # Filled in after entity discovery (step 3). Keep every entity here so
+  # re-targeting a card is a one-line change.
+  climate_main: climate.thermostat
+
+packages:
+  hardware:    !include packages/hardware.yaml
+  core:        !include packages/core.yaml
+  c6_update:   !include packages/c6_update.yaml
+  ha_entities: !include packages/ha_entities.yaml
+  lvgl_theme:  !include packages/lvgl_theme.yaml
+  lvgl_pages:  !include packages/lvgl_pages.yaml

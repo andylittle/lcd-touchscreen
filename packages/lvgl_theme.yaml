@@ -1,0 +1,150 @@
+substitutions:
+  # Colors
+  c_bg: "0x101418"
+  c_card: "0x1E242B"
+  c_card_on: "0xF5B84B"
+  c_text: "0xF2F2F2"
+  c_text_dim: "0x9AA3AD"
+  c_text_on: "0x1A1A1A"
+  c_accent: "0x3C8DDE"
+  # Card geometry (1280x800 landscape)
+  card_w: "290"
+  card_h: "160"
+  # MDI icon codepoints
+  i_lightbulb: "\U000F0335"
+  i_lightbulb_off: "\U000F0E4F"
+  i_power_plug: "\U000F06A5"
+  i_thermometer: "\U000F050F"
+  i_fire: "\U000F0238"
+  i_snowflake: "\U000F0717"
+  i_power: "\U000F0425"
+  i_autorenew: "\U000F06B2"
+  i_plus: "\U000F0415"
+  i_minus: "\U000F0374"
+  i_wifi: "\U000F05A9"
+  i_wifi_off: "\U000F05AA"
+
+font:
+  - file: "gfonts://Roboto"
+    id: f_body
+    size: 28
+    bpp: 4
+  - file: "gfonts://Roboto"
+    id: f_small
+    size: 22
+    bpp: 4
+  - file: "gfonts://Roboto@500"
+    id: f_title
+    size: 36
+    bpp: 4
+  - file: "gfonts://Roboto@300"
+    id: f_big
+    size: 96
+    bpp: 4
+  - file: "https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/fonts/materialdesignicons-webfont.ttf"
+    id: f_icon
+    size: 56
+    bpp: 4
+    glyphs:
+      - "\U000F0335"  # lightbulb
+      - "\U000F0E4F"  # lightbulb-off
+      - "\U000F06A5"  # power-plug
+      - "\U000F050F"  # thermometer
+      - "\U000F0238"  # fire
+      - "\U000F0717"  # snowflake
+      - "\U000F0425"  # power
+      - "\U000F06B2"  # autorenew
+      - "\U000F0415"  # plus
+      - "\U000F0374"  # minus
+  - file: "https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/fonts/materialdesignicons-webfont.ttf"
+    id: f_icon_small
+    size: 28
+    bpp: 4
+    glyphs:
+      - "\U000F05A9"  # wifi
+      - "\U000F05AA"  # wifi-off
+
+lvgl:
+  id: main_lvgl
+  displays: panel_display
+  touchscreens: panel_touch
+  rotation: 90
+  buffer_size: 100%
+  byte_order: little_endian
+  default_font: f_body
+  bg_color: ${c_bg}
+  text_color: ${c_text}
+  style_definitions:
+    - id: st_card
+      bg_color: ${c_card}
+      bg_opa: cover
+      border_width: 0
+      radius: 16
+      pad_all: 16
+      shadow_width: 0
+      text_color: ${c_text}
+    - id: st_card_on
+      bg_color: ${c_card_on}
+      text_color: ${c_text_on}
+    - id: st_card_icon
+      text_font: f_icon
+    - id: st_card_label
+      text_font: f_body
+    - id: st_page
+      bg_color: ${c_bg}
+      bg_opa: cover
+      pad_top: 70
+      pad_left: 20
+      pad_right: 20
+      pad_bottom: 20
+  theme:
+    button:
+      bg_color: ${c_card}
+      bg_opa: cover
+      border_width: 0
+      radius: 16
+      pad_all: 16
+      shadow_width: 0
+      text_color: ${c_text}
+      checked:
+        bg_color: ${c_card_on}
+        text_color: ${c_text_on}
+    slider:
+      bg_color: ${c_card}
+      knob:
+        bg_color: ${c_text}
+      indicator:
+        bg_color: ${c_accent}
+  # Screensaver: dim after 2 min idle, off after 10 min. Touch wakes (hardware.yaml).
+  on_idle:
+    - timeout: 120s
+      then:
+        - light.turn_on:
+            id: display_backlight
+            brightness: 20%
+    - timeout: 600s
+      then:
+        - light.turn_off: display_backlight
+        - lvgl.pause:
+
+script:
+  - id: screen_wake
+    mode: single
+    then:
+      - if:
+          condition:
+            lvgl.is_paused:
+          then:
+            - lvgl.resume:
+            - lvgl.widget.redraw:
+      - light.turn_on:
+          id: display_backlight
+          brightness: 100%
+  - id: refresh_clock
+    then:
+      - lvgl.label.update:
+          id: lbl_clock
+          text: !lambda |-
+            auto t = id(ha_time).now();
+            if (!t.is_valid()) return std::string("--:--");
+            return t.strftime("%-I:%M %p");
