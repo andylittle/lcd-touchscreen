@@ -127,6 +127,10 @@ lvgl:
         - light.turn_off: display_backlight
         - lvgl.pause:
 
+esphome:
+  includes:
+    - packages/tap_guard.h
+
 script:
   - id: screen_wake
     mode: single

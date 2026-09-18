@@ -64,10 +64,14 @@ lvgl:
                         variables:
                           pct: !lambda return (int) x;
             on_click:
-              - homeassistant.action:
-                  action: light.toggle
-                  data:
-                    entity_id: ${light_1}
+              - if:
+                  condition:
+                    lambda: 'return tap_allowed();'
+                  then:
+                  - homeassistant.action:
+                      action: light.toggle
+                      data:
+                        entity_id: ${light_1}
         - button:
             id: btn_light_2
             width: ${card_w}
@@ -100,10 +104,14 @@ lvgl:
                         variables:
                           pct: !lambda return (int) x;
             on_click:
-              - homeassistant.action:
-                  action: light.toggle
-                  data:
-                    entity_id: ${light_2}
+              - if:
+                  condition:
+                    lambda: 'return tap_allowed();'
+                  then:
+                  - homeassistant.action:
+                      action: light.toggle
+                      data:
+                        entity_id: ${light_2}
         - button:
             id: btn_light_3
             width: ${card_w}
@@ -136,10 +144,14 @@ lvgl:
                         variables:
                           pct: !lambda return (int) x;
             on_click:
-              - homeassistant.action:
-                  action: light.toggle
-                  data:
-                    entity_id: ${light_3}
+              - if:
+                  condition:
+                    lambda: 'return tap_allowed();'
+                  then:
+                  - homeassistant.action:
+                      action: light.toggle
+                      data:
+                        entity_id: ${light_3}
         - button:
             id: btn_light_4
             width: ${card_w}
@@ -172,10 +184,14 @@ lvgl:
                         variables:
                           pct: !lambda return (int) x;
             on_click:
-              - homeassistant.action:
-                  action: light.toggle
-                  data:
-                    entity_id: ${light_4}
+              - if:
+                  condition:
+                    lambda: 'return tap_allowed();'
+                  then:
+                  - homeassistant.action:
+                      action: light.toggle
+                      data:
+                        entity_id: ${light_4}
         # ---- Switches ----
         - button:
             id: btn_switch_1
@@ -191,10 +207,14 @@ lvgl:
                   text: "${switch_1_name}"
                   align: bottom_left
             on_click:
-              - homeassistant.action:
-                  action: switch.toggle
-                  data:
-                    entity_id: ${switch_1}
+              - if:
+                  condition:
+                    lambda: 'return tap_allowed();'
+                  then:
+                  - homeassistant.action:
+                      action: switch.toggle
+                      data:
+                        entity_id: ${switch_1}
         - button:
             id: btn_switch_2
             width: ${card_w}
@@ -209,10 +229,14 @@ lvgl:
                   text: "${switch_2_name}"
                   align: bottom_left
             on_click:
-              - homeassistant.action:
-                  action: switch.toggle
-                  data:
-                    entity_id: ${switch_2}
+              - if:
+                  condition:
+                    lambda: 'return tap_allowed();'
+                  then:
+                  - homeassistant.action:
+                      action: switch.toggle
+                      data:
+                        entity_id: ${switch_2}
         - button:
             id: btn_switch_3
             width: ${card_w}
@@ -227,10 +251,14 @@ lvgl:
                   text: "${switch_3_name}"
                   align: bottom_left
             on_click:
-              - homeassistant.action:
-                  action: switch.toggle
-                  data:
-                    entity_id: ${switch_3}
+              - if:
+                  condition:
+                    lambda: 'return tap_allowed();'
+                  then:
+                  - homeassistant.action:
+                      action: switch.toggle
+                      data:
+                        entity_id: ${switch_3}
         - button:
             id: btn_switch_4
             width: ${card_w}
@@ -245,10 +273,14 @@ lvgl:
                   text: "${switch_4_name}"
                   align: bottom_left
             on_click:
-              - homeassistant.action:
-                  action: switch.toggle
-                  data:
-                    entity_id: ${switch_4}
+              - if:
+                  condition:
+                    lambda: 'return tap_allowed();'
+                  then:
+                  - homeassistant.action:
+                      action: switch.toggle
+                      data:
+                        entity_id: ${switch_4}
         # ---- Thermostat card (full width) ----
         - obj:
             id: card_climate
@@ -312,18 +344,22 @@ lvgl:
                             text: ${i_minus}
                             align: center
                       on_click:
-                        - homeassistant.action:
-                            action: climate.set_temperature
-                            data:
-                              entity_id: ${climate_main}
-                            data_template:
-                              temperature: "{{ t }}"
-                            variables:
-                              t: !lambda |-
-                                float sp = id(cl_setpoint).state;
-                                if (std::isnan(sp)) sp = id(cl_current).state;
-                                if (std::isnan(sp)) sp = 70;
-                                return sp - ${temp_step};
+                        - if:
+                            condition:
+                              lambda: 'return tap_allowed();'
+                            then:
+                            - homeassistant.action:
+                                action: climate.set_temperature
+                                data:
+                                  entity_id: ${climate_main}
+                                data_template:
+                                  temperature: "{{ t }}"
+                                variables:
+                                  t: !lambda |-
+                                    float sp = id(cl_setpoint).state;
+                                    if (std::isnan(sp)) sp = id(cl_current).state;
+                                    if (std::isnan(sp)) sp = 70;
+                                    return sp - ${temp_step};
                   - label:
                       id: lbl_cl_setpoint
                       text: "--${temp_unit}"
@@ -340,18 +376,22 @@ lvgl:
                             text: ${i_plus}
                             align: center
                       on_click:
-                        - homeassistant.action:
-                            action: climate.set_temperature
-                            data:
-                              entity_id: ${climate_main}
-                            data_template:
-                              temperature: "{{ t }}"
-                            variables:
-                              t: !lambda |-
-                                float sp = id(cl_setpoint).state;
-                                if (std::isnan(sp)) sp = id(cl_current).state;
-                                if (std::isnan(sp)) sp = 70;
-                                return sp + ${temp_step};
+                        - if:
+                            condition:
+                              lambda: 'return tap_allowed();'
+                            then:
+                            - homeassistant.action:
+                                action: climate.set_temperature
+                                data:
+                                  entity_id: ${climate_main}
+                                data_template:
+                                  temperature: "{{ t }}"
+                                variables:
+                                  t: !lambda |-
+                                    float sp = id(cl_setpoint).state;
+                                    if (std::isnan(sp)) sp = id(cl_current).state;
+                                    if (std::isnan(sp)) sp = 70;
+                                    return sp + ${temp_step};
                   - obj:
                       width: 24
                       height: 10
@@ -367,11 +407,15 @@ lvgl:
                             text: ${i_fire}
                             align: center
                       on_click:
-                        - homeassistant.action:
-                            action: climate.set_hvac_mode
-                            data:
-                              entity_id: ${climate_main}
-                              hvac_mode: heat
+                        - if:
+                            condition:
+                              lambda: 'return tap_allowed();'
+                            then:
+                            - homeassistant.action:
+                                action: climate.set_hvac_mode
+                                data:
+                                  entity_id: ${climate_main}
+                                  hvac_mode: heat
                   - button:
                       id: btn_cl_cool
                       width: 90
@@ -382,11 +426,15 @@ lvgl:
                             text: ${i_snowflake}
                             align: center
                       on_click:
-                        - homeassistant.action:
-                            action: climate.set_hvac_mode
-                            data:
-                              entity_id: ${climate_main}
-                              hvac_mode: cool
+                        - if:
+                            condition:
+                              lambda: 'return tap_allowed();'
+                            then:
+                            - homeassistant.action:
+                                action: climate.set_hvac_mode
+                                data:
+                                  entity_id: ${climate_main}
+                                  hvac_mode: cool
                   - button:
                       id: btn_cl_auto
                       width: 90
@@ -397,11 +445,15 @@ lvgl:
                             text: ${i_autorenew}
                             align: center
                       on_click:
-                        - homeassistant.action:
-                            action: climate.set_hvac_mode
-                            data:
-                              entity_id: ${climate_main}
-                              hvac_mode: heat_cool
+                        - if:
+                            condition:
+                              lambda: 'return tap_allowed();'
+                            then:
+                            - homeassistant.action:
+                                action: climate.set_hvac_mode
+                                data:
+                                  entity_id: ${climate_main}
+                                  hvac_mode: heat_cool
                   - button:
                       id: btn_cl_off
                       width: 90
@@ -412,11 +464,15 @@ lvgl:
                             text: ${i_power}
                             align: center
                       on_click:
-                        - homeassistant.action:
-                            action: climate.set_hvac_mode
-                            data:
-                              entity_id: ${climate_main}
-                              hvac_mode: "off"
+                        - if:
+                            condition:
+                              lambda: 'return tap_allowed();'
+                            then:
+                            - homeassistant.action:
+                                action: climate.set_hvac_mode
+                                data:
+                                  entity_id: ${climate_main}
+                                  hvac_mode: "off"
 
 wifi:
   on_connect:

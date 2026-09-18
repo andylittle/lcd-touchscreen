@@ -90,7 +90,7 @@ touchscreen:
     # writes but its firmware never starts (RAM marker at 0xB0 stays 0).
     setup_priority: 590
     # Controller may not interrupt on finger lift; poll briefly so LVGL gets release/click.
-    touch_timeout: 50ms
+    touch_timeout: 150ms
     transform:
       swap_xy: false
       mirror_x: true
