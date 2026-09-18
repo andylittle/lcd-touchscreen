@@ -6,7 +6,7 @@ substitutions:
   room: Living Room
 
   # ---- Home Assistant entities shown on the dashboard ----
-  # Picked from HA on 2026-09-18 (HA at 192.168.1.212:8123). Keep every entity here so
+  # Picked from Home Assistant on 2026-09-18. Keep every entity here so
   # re-targeting a card is a one-line change. Names are the card labels.
   light_1: light.living_room_lamp_one
   light_1_name: LR Lamp One
