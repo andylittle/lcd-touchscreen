@@ -6,9 +6,28 @@ substitutions:
   room: Living Room
 
   # ---- Home Assistant entities shown on the dashboard ----
-  # Filled in after entity discovery (step 3). Keep every entity here so
-  # re-targeting a card is a one-line change.
+  # PLACEHOLDERS until entity discovery. Keep every entity here so
+  # re-targeting a card is a one-line change. Names are the card labels.
+  light_1: light.living_room
+  light_1_name: Living Room
+  light_2: light.kitchen
+  light_2_name: Kitchen
+  light_3: light.bedroom
+  light_3_name: Bedroom
+  light_4: light.porch
+  light_4_name: Porch
+  switch_1: switch.fan
+  switch_1_name: Fan
+  switch_2: switch.lamp
+  switch_2_name: Lamp
+  switch_3: switch.heater
+  switch_3_name: Heater
+  switch_4: switch.outlet
+  switch_4_name: Outlet
   climate_main: climate.thermostat
+  climate_name: Thermostat
+  temp_unit: "°F"
+  temp_step: "1"
 
 packages:
   hardware:    !include packages/hardware.yaml

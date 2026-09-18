@@ -56,6 +56,20 @@ Then in Home Assistant: Settings > Devices > ESPHome, add the discovered device 
 **"Allow the device to perform Home Assistant actions"** on the integration entry. Without it
 the panel can read state but the buttons do nothing.
 
+## Dashboard
+
+Single landscape page: four light cards (tap toggles, slider sets brightness), four switch
+cards (tap toggles), and a full-width thermostat card (current temperature, setpoint with
++/- buttons, heat / cool / auto / off mode buttons). State is mirrored from HA through
+`packages/ha_entities.yaml`, so cards follow changes made elsewhere.
+
+All entity ids and card labels are substitutions at the top of `panel.yaml`
+(`light_1` / `light_1_name`, `switch_1`, `climate_main`, `temp_unit`, `temp_step`).
+Change them there, then `esphome run panel.yaml` to push over the air.
+
+Screensaver: backlight dims to 20 % after 2 min idle and turns off after 10 min; any touch wakes
+it. The backlight is also a light entity in HA (`Display Backlight`).
+
 ## Troubleshooting
 
 - **Black or garbled screen**: try `model: JC8012P4A1` (older panel revision).

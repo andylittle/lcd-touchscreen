@@ -1,4 +1,155 @@
-# Home Assistant state mirrored into the panel. Populated after entity
-# discovery (step 3). Each dashboard card has a matching entry here.
-sensor: []
-binary_sensor: []
+# Home Assistant state mirrored into the panel. One block per dashboard card.
+# Requires the device to be added to HA; state arrives over the native API.
+
+binary_sensor:
+  - platform: homeassistant
+    id: st_light_1
+    entity_id: ${light_1}
+    on_state:
+      - lvgl.widget.update:
+          id: btn_light_1
+          state:
+            checked: !lambda return x;
+  - platform: homeassistant
+    id: st_light_2
+    entity_id: ${light_2}
+    on_state:
+      - lvgl.widget.update:
+          id: btn_light_2
+          state:
+            checked: !lambda return x;
+  - platform: homeassistant
+    id: st_light_3
+    entity_id: ${light_3}
+    on_state:
+      - lvgl.widget.update:
+          id: btn_light_3
+          state:
+            checked: !lambda return x;
+  - platform: homeassistant
+    id: st_light_4
+    entity_id: ${light_4}
+    on_state:
+      - lvgl.widget.update:
+          id: btn_light_4
+          state:
+            checked: !lambda return x;
+  - platform: homeassistant
+    id: st_switch_1
+    entity_id: ${switch_1}
+    on_state:
+      - lvgl.widget.update:
+          id: btn_switch_1
+          state:
+            checked: !lambda return x;
+  - platform: homeassistant
+    id: st_switch_2
+    entity_id: ${switch_2}
+    on_state:
+      - lvgl.widget.update:
+          id: btn_switch_2
+          state:
+            checked: !lambda return x;
+  - platform: homeassistant
+    id: st_switch_3
+    entity_id: ${switch_3}
+    on_state:
+      - lvgl.widget.update:
+          id: btn_switch_3
+          state:
+            checked: !lambda return x;
+  - platform: homeassistant
+    id: st_switch_4
+    entity_id: ${switch_4}
+    on_state:
+      - lvgl.widget.update:
+          id: btn_switch_4
+          state:
+            checked: !lambda return x;
+
+sensor:
+  # Light brightness (0-255 in HA) -> slider 0-100
+  - platform: homeassistant
+    id: br_light_1
+    entity_id: ${light_1}
+    attribute: brightness
+    on_value:
+      - lvgl.slider.update:
+          id: sld_light_1
+          value: !lambda 'return std::isnan(x) ? 0 : (int)(x * 100 / 255);'
+  - platform: homeassistant
+    id: br_light_2
+    entity_id: ${light_2}
+    attribute: brightness
+    on_value:
+      - lvgl.slider.update:
+          id: sld_light_2
+          value: !lambda 'return std::isnan(x) ? 0 : (int)(x * 100 / 255);'
+  - platform: homeassistant
+    id: br_light_3
+    entity_id: ${light_3}
+    attribute: brightness
+    on_value:
+      - lvgl.slider.update:
+          id: sld_light_3
+          value: !lambda 'return std::isnan(x) ? 0 : (int)(x * 100 / 255);'
+  - platform: homeassistant
+    id: br_light_4
+    entity_id: ${light_4}
+    attribute: brightness
+    on_value:
+      - lvgl.slider.update:
+          id: sld_light_4
+          value: !lambda 'return std::isnan(x) ? 0 : (int)(x * 100 / 255);'
+
+  # Thermostat
+  - platform: homeassistant
+    id: cl_current
+    entity_id: ${climate_main}
+    attribute: current_temperature
+    on_value:
+      - lvgl.label.update:
+          id: lbl_cl_current
+          text: !lambda |-
+            if (std::isnan(x)) return std::string("--");
+            char b[16]; snprintf(b, sizeof(b), "%.0f", x); return std::string(b);
+  - platform: homeassistant
+    id: cl_setpoint
+    entity_id: ${climate_main}
+    attribute: temperature
+    on_value:
+      - lvgl.label.update:
+          id: lbl_cl_setpoint
+          text: !lambda |-
+            if (std::isnan(x)) return std::string("--${temp_unit}");
+            char b[16]; snprintf(b, sizeof(b), "%.0f${temp_unit}", x); return std::string(b);
+
+text_sensor:
+  - platform: homeassistant
+    id: cl_mode
+    entity_id: ${climate_main}
+    on_value:
+      - lvgl.widget.update:
+          id: btn_cl_heat
+          state:
+            checked: !lambda return x == "heat";
+      - lvgl.widget.update:
+          id: btn_cl_cool
+          state:
+            checked: !lambda return x == "cool";
+      - lvgl.widget.update:
+          id: btn_cl_auto
+          state:
+            checked: !lambda return x == "heat_cool" || x == "auto";
+      - lvgl.widget.update:
+          id: btn_cl_off
+          state:
+            checked: !lambda return x == "off";
+      - lvgl.label.update:
+          id: lbl_cl_mode
+          text: !lambda |-
+            if (x == "heat") return std::string("Heating");
+            if (x == "cool") return std::string("Cooling");
+            if (x == "heat_cool" || x == "auto") return std::string("Auto");
+            if (x == "off") return std::string("Off");
+            return x;

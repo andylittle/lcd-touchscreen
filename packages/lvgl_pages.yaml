@@ -1,4 +1,4 @@
-# Bring-up page. Replaced by the real dashboard in step 4.
+# Dashboard: 1280x800 landscape. Row 1 lights, row 2 switches, row 3 thermostat.
 lvgl:
   top_layer:
     widgets:
@@ -31,11 +31,11 @@ lvgl:
         pad_row: 16
         pad_column: 16
       widgets:
+        # ---- Lights ----
         - button:
-            id: btn_test
+            id: btn_light_1
             width: ${card_w}
             height: ${card_h}
-            checkable: true
             widgets:
               - label:
                   styles: st_card_icon
@@ -43,25 +43,386 @@ lvgl:
                   align: top_left
               - label:
                   styles: st_card_label
-                  text: "Test button"
+                  text: "${light_1_name}"
+                  align: left_mid
+                  y: 14
+              - slider:
+                  id: sld_light_1
+                  align: bottom_mid
+                  width: 100%
+                  height: 10
+                  min_value: 0
+                  max_value: 100
+                  value: 0
+                  on_release:
+                    - homeassistant.action:
+                        action: light.turn_on
+                        data:
+                          entity_id: ${light_1}
+                        data_template:
+                          brightness_pct: "{{ pct }}"
+                        variables:
+                          pct: !lambda return (int) x;
+            on_click:
+              - homeassistant.action:
+                  action: light.toggle
+                  data:
+                    entity_id: ${light_1}
+        - button:
+            id: btn_light_2
+            width: ${card_w}
+            height: ${card_h}
+            widgets:
+              - label:
+                  styles: st_card_icon
+                  text: ${i_lightbulb}
+                  align: top_left
+              - label:
+                  styles: st_card_label
+                  text: "${light_2_name}"
+                  align: left_mid
+                  y: 14
+              - slider:
+                  id: sld_light_2
+                  align: bottom_mid
+                  width: 100%
+                  height: 10
+                  min_value: 0
+                  max_value: 100
+                  value: 0
+                  on_release:
+                    - homeassistant.action:
+                        action: light.turn_on
+                        data:
+                          entity_id: ${light_2}
+                        data_template:
+                          brightness_pct: "{{ pct }}"
+                        variables:
+                          pct: !lambda return (int) x;
+            on_click:
+              - homeassistant.action:
+                  action: light.toggle
+                  data:
+                    entity_id: ${light_2}
+        - button:
+            id: btn_light_3
+            width: ${card_w}
+            height: ${card_h}
+            widgets:
+              - label:
+                  styles: st_card_icon
+                  text: ${i_lightbulb}
+                  align: top_left
+              - label:
+                  styles: st_card_label
+                  text: "${light_3_name}"
+                  align: left_mid
+                  y: 14
+              - slider:
+                  id: sld_light_3
+                  align: bottom_mid
+                  width: 100%
+                  height: 10
+                  min_value: 0
+                  max_value: 100
+                  value: 0
+                  on_release:
+                    - homeassistant.action:
+                        action: light.turn_on
+                        data:
+                          entity_id: ${light_3}
+                        data_template:
+                          brightness_pct: "{{ pct }}"
+                        variables:
+                          pct: !lambda return (int) x;
+            on_click:
+              - homeassistant.action:
+                  action: light.toggle
+                  data:
+                    entity_id: ${light_3}
+        - button:
+            id: btn_light_4
+            width: ${card_w}
+            height: ${card_h}
+            widgets:
+              - label:
+                  styles: st_card_icon
+                  text: ${i_lightbulb}
+                  align: top_left
+              - label:
+                  styles: st_card_label
+                  text: "${light_4_name}"
+                  align: left_mid
+                  y: 14
+              - slider:
+                  id: sld_light_4
+                  align: bottom_mid
+                  width: 100%
+                  height: 10
+                  min_value: 0
+                  max_value: 100
+                  value: 0
+                  on_release:
+                    - homeassistant.action:
+                        action: light.turn_on
+                        data:
+                          entity_id: ${light_4}
+                        data_template:
+                          brightness_pct: "{{ pct }}"
+                        variables:
+                          pct: !lambda return (int) x;
+            on_click:
+              - homeassistant.action:
+                  action: light.toggle
+                  data:
+                    entity_id: ${light_4}
+        # ---- Switches ----
+        - button:
+            id: btn_switch_1
+            width: ${card_w}
+            height: ${card_h}
+            widgets:
+              - label:
+                  styles: st_card_icon
+                  text: ${i_power_plug}
+                  align: top_left
+              - label:
+                  styles: st_card_label
+                  text: "${switch_1_name}"
                   align: bottom_left
             on_click:
-              - logger.log: "Test button clicked"
-        - label:
-            id: lbl_status
-            text: "Bring-up: display OK. Tap the card; check the log."
-            text_font: f_small
-            text_color: ${c_text_dim}
+              - homeassistant.action:
+                  action: switch.toggle
+                  data:
+                    entity_id: ${switch_1}
+        - button:
+            id: btn_switch_2
+            width: ${card_w}
+            height: ${card_h}
+            widgets:
+              - label:
+                  styles: st_card_icon
+                  text: ${i_power_plug}
+                  align: top_left
+              - label:
+                  styles: st_card_label
+                  text: "${switch_2_name}"
+                  align: bottom_left
+            on_click:
+              - homeassistant.action:
+                  action: switch.toggle
+                  data:
+                    entity_id: ${switch_2}
+        - button:
+            id: btn_switch_3
+            width: ${card_w}
+            height: ${card_h}
+            widgets:
+              - label:
+                  styles: st_card_icon
+                  text: ${i_power_plug}
+                  align: top_left
+              - label:
+                  styles: st_card_label
+                  text: "${switch_3_name}"
+                  align: bottom_left
+            on_click:
+              - homeassistant.action:
+                  action: switch.toggle
+                  data:
+                    entity_id: ${switch_3}
+        - button:
+            id: btn_switch_4
+            width: ${card_w}
+            height: ${card_h}
+            widgets:
+              - label:
+                  styles: st_card_icon
+                  text: ${i_power_plug}
+                  align: top_left
+              - label:
+                  styles: st_card_label
+                  text: "${switch_4_name}"
+                  align: bottom_left
+            on_click:
+              - homeassistant.action:
+                  action: switch.toggle
+                  data:
+                    entity_id: ${switch_4}
+        # ---- Thermostat card (full width) ----
+        - obj:
+            id: card_climate
+            styles: st_card
             width: 100%
+            height: 200
+            widgets:
+              - label:
+                  styles: st_card_icon
+                  text: ${i_thermometer}
+                  align: top_left
+              - label:
+                  text: "${climate_name}"
+                  styles: st_card_label
+                  align: bottom_left
+              - label:
+                  id: lbl_cl_mode
+                  text: "--"
+                  text_font: f_small
+                  text_color: ${c_text_dim}
+                  align: bottom_left
+                  x: 0
+                  y: -36
+              # Current temperature
+              - label:
+                  id: lbl_cl_current
+                  text: "--"
+                  text_font: f_big
+                  align: left_mid
+                  x: 200
+                  y: -6
+              - label:
+                  text: "current ${temp_unit}"
+                  text_font: f_small
+                  text_color: ${c_text_dim}
+                  align: left_mid
+                  x: 200
+                  y: 58
+              # Setpoint with +/- and mode buttons
+              - obj:
+                  align: right_mid
+                  width: 720
+                  height: 100%
+                  bg_opa: transp
+                  border_width: 0
+                  pad_all: 0
+                  layout:
+                    type: flex
+                    flex_flow: row
+                    flex_align_main: end
+                    flex_align_cross: center
+                    pad_column: 12
+                  widgets:
+                  - button:
+                      id: btn_cl_minus
+                      width: 90
+                      height: 90
+                      widgets:
+                        - label:
+                            styles: st_card_icon
+                            text: ${i_minus}
+                            align: center
+                      on_click:
+                        - homeassistant.action:
+                            action: climate.set_temperature
+                            data:
+                              entity_id: ${climate_main}
+                            data_template:
+                              temperature: "{{ t }}"
+                            variables:
+                              t: !lambda |-
+                                float sp = id(cl_setpoint).state;
+                                if (std::isnan(sp)) sp = id(cl_current).state;
+                                if (std::isnan(sp)) sp = 70;
+                                return sp - ${temp_step};
+                  - label:
+                      id: lbl_cl_setpoint
+                      text: "--${temp_unit}"
+                      text_font: f_title
+                      width: 150
+                      text_align: center
+                  - button:
+                      id: btn_cl_plus
+                      width: 90
+                      height: 90
+                      widgets:
+                        - label:
+                            styles: st_card_icon
+                            text: ${i_plus}
+                            align: center
+                      on_click:
+                        - homeassistant.action:
+                            action: climate.set_temperature
+                            data:
+                              entity_id: ${climate_main}
+                            data_template:
+                              temperature: "{{ t }}"
+                            variables:
+                              t: !lambda |-
+                                float sp = id(cl_setpoint).state;
+                                if (std::isnan(sp)) sp = id(cl_current).state;
+                                if (std::isnan(sp)) sp = 70;
+                                return sp + ${temp_step};
+                  - obj:
+                      width: 24
+                      height: 10
+                      bg_opa: transp
+                      border_width: 0
+                  - button:
+                      id: btn_cl_heat
+                      width: 90
+                      height: 90
+                      widgets:
+                        - label:
+                            styles: st_card_icon
+                            text: ${i_fire}
+                            align: center
+                      on_click:
+                        - homeassistant.action:
+                            action: climate.set_hvac_mode
+                            data:
+                              entity_id: ${climate_main}
+                              hvac_mode: heat
+                  - button:
+                      id: btn_cl_cool
+                      width: 90
+                      height: 90
+                      widgets:
+                        - label:
+                            styles: st_card_icon
+                            text: ${i_snowflake}
+                            align: center
+                      on_click:
+                        - homeassistant.action:
+                            action: climate.set_hvac_mode
+                            data:
+                              entity_id: ${climate_main}
+                              hvac_mode: cool
+                  - button:
+                      id: btn_cl_auto
+                      width: 90
+                      height: 90
+                      widgets:
+                        - label:
+                            styles: st_card_icon
+                            text: ${i_autorenew}
+                            align: center
+                      on_click:
+                        - homeassistant.action:
+                            action: climate.set_hvac_mode
+                            data:
+                              entity_id: ${climate_main}
+                              hvac_mode: heat_cool
+                  - button:
+                      id: btn_cl_off
+                      width: 90
+                      height: 90
+                      widgets:
+                        - label:
+                            styles: st_card_icon
+                            text: ${i_power}
+                            align: center
+                      on_click:
+                        - homeassistant.action:
+                            action: climate.set_hvac_mode
+                            data:
+                              entity_id: ${climate_main}
+                              hvac_mode: "off"
 
 wifi:
   on_connect:
     - lvgl.label.update:
         id: lbl_wifi
         text: ${i_wifi}
-    - lvgl.label.update:
-        id: lbl_status
-        text: !lambda 'return "WiFi connected: " + id(wifi_ip).state;'
   on_disconnect:
     - lvgl.label.update:
         id: lbl_wifi
