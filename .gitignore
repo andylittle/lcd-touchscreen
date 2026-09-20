@@ -9,5 +9,5 @@ docs/images/originals/
 # Local agent/context notes, not for publication
 CLAUDE.local.md
 
-# Stray personal documents that land in this folder
-259202402026818145517E.pdf
+# Stray downloads that land in the project root (datasheets belong in docs/)
+/*.pdf
